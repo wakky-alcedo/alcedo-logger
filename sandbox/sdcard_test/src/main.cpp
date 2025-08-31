@@ -6,14 +6,20 @@
 #include "SD.h"
 
 SPIClass SPI_SD(VSPI);
+bool sd_initialized = false;
 
 void sd_dir(void) {
   enum { spi_sck = 18, spi_miso = 19, spi_mosi = 23, spi_ss = 5 };
 
-  SPI_SD.begin(spi_sck, spi_miso, spi_mosi, spi_ss);
-  SD.begin(spi_ss, SPI_SD);
-  if (!SD.begin(spi_ss, SPI_SD)) {
-    Serial.println("Card Mount Failed");
+  // SD初期化は1回だけ実行
+  if (!sd_initialized) {
+    SPI_SD.begin(spi_sck, spi_miso, spi_mosi, spi_ss);
+    if (!SD.begin(spi_ss, SPI_SD)) {
+      Serial.println("Card Mount Failed");
+      return;  // 初期化失敗時は処理を中断
+    }
+    sd_initialized = true;
+    Serial.println("SD Card initialized successfully");
   }
 
   uint8_t cardType = SD.cardType();
@@ -35,26 +41,41 @@ void sd_dir(void) {
   uint64_t cardSize = SD.cardSize() / (1024 * 1024);
   Serial.printf("SD Card Size: %lluMB\n", cardSize);
 
+  // ディレクトリアクセス前にわずかな遅延を追加
+  delay(10);
+  
   File root = SD.open("/");
-  if (root) {
-    File file = root.openNextFile();
-    while (file) {
-      time_t t = file.getLastWrite();
-      struct tm *tm_t = localtime(&t);
-      Serial.printf("%04d-%02d-%02d %02d:%02d:%02d ", tm_t->tm_year + 1900, tm_t->tm_mon + 1, tm_t->tm_mday, tm_t->tm_hour, tm_t->tm_min, tm_t->tm_sec);
-      if (file.isDirectory()) {
-        Serial.print("<DIR>");
-        Serial.print("           ");
-        Serial.println(file.name());
-      } else {
-        // ファイル名とファイルサイズを出力
-        Serial.print("     ");
-        Serial.printf("%10d ", file.size());
-        Serial.println(file.name());
-      }
-      file = root.openNextFile();
-    }
+  if (!root) {
+    Serial.println("Failed to open root directory");
+    return;
   }
+  
+  if (!root.isDirectory()) {
+    Serial.println("Root is not a directory");
+    root.close();
+    return;
+  }
+
+  Serial.println("Root directory contents:");
+  File file = root.openNextFile();
+  while (file) {
+    time_t t = file.getLastWrite();
+    struct tm *tm_t = localtime(&t);
+    Serial.printf("%04d-%02d-%02d %02d:%02d:%02d ", tm_t->tm_year + 1900, tm_t->tm_mon + 1, tm_t->tm_mday, tm_t->tm_hour, tm_t->tm_min, tm_t->tm_sec);
+    if (file.isDirectory()) {
+      Serial.print("<DIR>");
+      Serial.print("           ");
+      Serial.println(file.name());
+    } else {
+      // ファイル名とファイルサイズを出力
+      Serial.print("     ");
+      Serial.printf("%10d ", file.size());
+      Serial.println(file.name());
+    }
+    file.close();
+    file = root.openNextFile();
+  }
+  root.close();
 }
 
 class LGFX : public lgfx::LGFX_Device
@@ -104,7 +125,7 @@ class LGFX : public lgfx::LGFX_Device
         cfg.invert           = false;
         cfg.rgb_order        = false;
         cfg.dlen_16bit       = false;
-        cfg.bus_shared       = false; // 変更
+        cfg.bus_shared       = true; // SPIバス共有を有効化
 
         _panel_instance.config(cfg);
       }
@@ -129,7 +150,7 @@ class LGFX : public lgfx::LGFX_Device
         cfg.y_min      = 3700;  // 変更
         cfg.y_max      =  200;  // 変更
         cfg.pin_int    = -1;    // 変更
-        cfg.bus_shared = false; // 変更
+        cfg.bus_shared = true;  // バス共有を有効化
         cfg.offset_rotation = 0;
 
         cfg.spi_host = HSPI_HOST; // 変更
@@ -152,12 +173,21 @@ LGFX display;
 void setup(void) {
   Serial.begin(115200);
   delay(1000);
-
+  
+  Serial.println("Initializing display...");
   display.init();
+  
+  // タッチパネルの初期化確認
+  if (display.touch()) {
+    Serial.println("Touch panel initialized successfully");
+  } else {
+    Serial.println("Touch panel initialization failed");
+  }
 
   display.setTextSize((std::max(display.width(), display.height()) + 255) >> 8);
 
   display.fillScreen(TFT_BLACK);
+  Serial.println("Setup completed");
 }
 
 uint32_t count = ~0;
@@ -185,12 +215,23 @@ void loop(void) {
 
   while ( (millis() - start) < 1000) {
     int32_t x, y;
+    // タッチ状態を複数回チェックして安定化
     if (display.getTouch(&x, &y)) {
       display.fillRect(x - 2, y - 2, 5, 5, TFT_RED);
+      Serial.printf("Touch detected at: x=%d, y=%d\n", x, y);
+      
+      // タッチが継続している間は追加の点を描画
+      delay(50);
+      if (display.getTouch(&x, &y)) {
+        display.fillRect(x - 1, y - 1, 3, 3, TFT_GREEN);
+      }
     }
+    delay(5); // タッチ読み取りの頻度を上げる
   }
 
+  // ディスプレイのSPIバスを一時的に解放してからSDアクセス
   sd_dir();
 
+  // SDアクセス後にディスプレイバスを再初期化
   display.initBus();
 }
