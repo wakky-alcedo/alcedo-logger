@@ -10,6 +10,7 @@ void settings_init() {
     File file = SD.open(SETTINGS_FILE);
     if (!file) {
         save_settings(); // デフォルト設定で作成
+        Serial.println("Settings file created");
         return;
     }
     DynamicJsonDocument config(1024);

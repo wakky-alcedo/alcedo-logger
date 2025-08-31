@@ -4,6 +4,12 @@
  */
 #pragma once
 
+#include "display_manager.h"
+#include <LovyanGFX.hpp>
+#include <config.h>
+#include <lvgl.h>
+#include <ui/ui.h>
+
 /**
  * @brief ディスプレイとLVGLのドライバを初期化します。
  * @details LCDの初期化、LVGLの基本設定、描画バッファの確保、

@@ -15,13 +15,13 @@ void DropdownStartupScreenChange(lv_event_t * e) {
 }
 
 
-static void log_list_event_handler(lv_event_t * e) {
-    lv_obj_t* target = lv_event_get_target(e);
-    const char* file_name_cstr = lv_list_get_btn_text(ui_loglist, target);
-    String file_name = "/" + String(file_name_cstr);
-    String content = read_log_file_content(file_name);
-    lv_textarea_set_text(ui_SerialPloter, content.c_str());
-}
+// static void log_list_event_handler(lv_event_t * e) {
+//     lv_obj_t* target = lv_event_get_target(e);
+//     const char* file_name_cstr = lv_list_get_btn_text(ui_loglist, target);
+//     String file_name = "/" + String(file_name_cstr);
+//     String content = read_log_file_content(file_name);
+//     lv_textarea_set_text(ui_SerialPloter, content.c_str());
+// }
 
 // --- 初期化 ---
 // void ui_events_init() {

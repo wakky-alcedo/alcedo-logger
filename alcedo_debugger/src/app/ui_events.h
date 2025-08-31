@@ -9,7 +9,7 @@
 /**
  * @brief ホーム画面のログ一覧リストのボタンオブジェクトを保持します。
  */
-extern std::vector<lv_obj_t*> log_list_buttons;
+// extern std::vector<lv_obj_t*> log_list_buttons;
 
 /**
  * @brief UIイベントの初期化を行います。
@@ -20,12 +20,12 @@ void ui_events_init();
 
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
-void DropdownStartupScreenChange(lv_event_t * e);
+// void DropdownStartupScreenChange(lv_event_t * e);
 
-#ifdef __cplusplus
-} /*extern "C"*/
-#endif
+// #ifdef __cplusplus
+// } /*extern "C"*/
+// #endif

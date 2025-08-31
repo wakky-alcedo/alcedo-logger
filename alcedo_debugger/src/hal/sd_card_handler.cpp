@@ -9,12 +9,9 @@ extern std::vector<lv_obj_t*> log_list_buttons; // ui_events.cppで定義
 
 void sd_card_init() {
     if (!SD.begin(SD_CS_PIN)) {
-        // エラー処理: UIに表示するなど
-        Serial.println("Card Mount Failed");
-        lv_label_set_text(ui_statuslabel, "SD Card Mount Failed!");
-        while (1);
+        Serial.println("SD card initialization failed!");
+        return;
     }
-    Serial.println("SD Card Mount Successful");
     create_new_log_file();
 }
 
@@ -24,13 +21,15 @@ void create_new_log_file() {
         fileNumber++;
         char fileName[30];
         sprintf(fileName, "%s%03d%s", LOG_FILE_PREFIX, fileNumber, LOG_FILE_EXTENSION);
-        if (!SD.exists(fileName)) {
+        Serial.println(fileName);
+        if (!SD.exists(fileName)) { // 
             currentLogFile = String(fileName);
+            Serial.println("New log file created: " + currentLogFile);
             break;
         }
     }
     // UIのステータスラベルに現在のログファイル名を表示
-    lv_label_set_text_fmt(ui_statuslabel, "Logging to: %s", currentLogFile.c_str());
+    // lv_label_set_text_fmt(ui_statuslabel, "Logging to: %s", currentLogFile.c_str());
 }
 
 void log_to_sd(const String& data) {

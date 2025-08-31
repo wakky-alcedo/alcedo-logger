@@ -1,7 +1,8 @@
 #include "display_manager.h"
 #include <LovyanGFX.hpp>
-#include "LGFX_Config.hpp"
+#include <config.h>
 #include <lvgl.h>
+#include <ui/ui.h>
 
 // LovyanGFXのインスタンス (config.hで設定)
 static LGFX lcd;
@@ -10,7 +11,8 @@ static LGFX lcd;
 static const uint32_t screenWidth = 320;
 static const uint32_t screenHeight = 240;
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t buf[screenWidth * 10];
+// static lv_color_t buf[screenWidth * 10];
+static lv_color_t buf[screenWidth * screenHeight / 10];
 
 /**
  * @brief LVGL用コールバック: ディスプレイへの描画
@@ -58,11 +60,17 @@ void touchpad_read(lv_indev_drv_t *indev, lv_indev_data_t *data) {
 }
 
 void display_init() {
+    lv_init();
+
+#if LV_USE_LOG != 0
+    lv_log_register_print_cb( my_print ); /* register print function for debugging */
+#endif
+
     lcd.begin();
     lcd.setRotation( 1 ); /* Landscape orientation, flipped */
-    lv_init();
+    // lv_init();
     // lv_disp_draw_buf_init(&draw_buf, buf, NULL, screenWidth * 10);
-    lv_disp_draw_buf_init( &draw_buf, buf, NULL, screenWidth * screenHeight / 10 );
+    lv_disp_draw_buf_init(&draw_buf, buf, NULL, screenWidth * screenHeight / 10);
 
     // ディスプレイドライバの登録
     /*Initialize the display*/
