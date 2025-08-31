@@ -5,6 +5,9 @@
 #pragma once
 #include <Arduino.h>
 
+// static String currentLogFile;
+extern String currentLogFile;
+
 /**
  * @brief SDカードの初期化とマウントを行います。
  * @details 起動時に一度だけ呼び出してください。失敗した場合はUIにエラーを表示します。

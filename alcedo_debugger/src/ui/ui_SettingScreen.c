@@ -6,15 +6,16 @@
 #include "ui.h"
 
 lv_obj_t * ui_SettingScreen = NULL;
-lv_obj_t * ui_Label2 = NULL;
+lv_obj_t * ui_Label1 = NULL;
 lv_obj_t * ui_startupscreen = NULL;
+lv_obj_t * ui_home = NULL;
 // event funtions
-void ui_event_startupscreen(lv_event_t * e)
+void ui_event_home(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        DropdownStartupScreenChange(e);
+        _ui_screen_change(&ui_HomeScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 200, 0, &ui_HomeScreen_screen_init);
     }
 }
 
@@ -25,24 +26,33 @@ void ui_SettingScreen_screen_init(void)
     ui_SettingScreen = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_SettingScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_Label2 = lv_label_create(ui_SettingScreen);
-    lv_obj_set_width(ui_Label2, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_Label2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Label2, -81);
-    lv_obj_set_y(ui_Label2, -70);
-    lv_obj_set_align(ui_Label2, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_Label2, "StartupScreen");
+    ui_Label1 = lv_label_create(ui_SettingScreen);
+    lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label1, -84);
+    lv_obj_set_y(ui_Label1, -41);
+    lv_obj_set_align(ui_Label1, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label1, "StartupScreen");
 
     ui_startupscreen = lv_dropdown_create(ui_SettingScreen);
-    lv_dropdown_set_options(ui_startupscreen, "Home\nRawSerial\nAnalytics");
+    lv_dropdown_set_options(ui_startupscreen, "Home\nRaw\nAnalytics");
     lv_obj_set_width(ui_startupscreen, 150);
     lv_obj_set_height(ui_startupscreen, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_startupscreen, 72);
-    lv_obj_set_y(ui_startupscreen, -69);
+    lv_obj_set_x(ui_startupscreen, 71);
+    lv_obj_set_y(ui_startupscreen, -42);
     lv_obj_set_align(ui_startupscreen, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_startupscreen, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
-    lv_obj_add_event_cb(ui_startupscreen, ui_event_startupscreen, LV_EVENT_ALL, NULL);
+    ui_home = lv_btn_create(ui_SettingScreen);
+    lv_obj_set_width(ui_home, 47);
+    lv_obj_set_height(ui_home, 50);
+    lv_obj_set_x(ui_home, -124);
+    lv_obj_set_y(ui_home, -88);
+    lv_obj_set_align(ui_home, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_home, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_home, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    lv_obj_add_event_cb(ui_home, ui_event_home, LV_EVENT_ALL, NULL);
 
 }
 
@@ -52,7 +62,8 @@ void ui_SettingScreen_screen_destroy(void)
 
     // NULL screen variables
     ui_SettingScreen = NULL;
-    ui_Label2 = NULL;
+    ui_Label1 = NULL;
     ui_startupscreen = NULL;
+    ui_home = NULL;
 
 }

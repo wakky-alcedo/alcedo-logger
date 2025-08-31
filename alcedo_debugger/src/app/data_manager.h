@@ -5,6 +5,15 @@
 #pragma once
 #include <Arduino.h>
 
+// 状態を定義するためのenum（列挙型）
+enum class DisplayMode {
+    LIVE = 0,      // ライブ表示モード
+    PLAYBACK = 1   // 過去ログ再生モード
+};
+
+// 現在のモードを保持する変数
+extern DisplayMode current_mode;
+
 /**
  * @brief UARTハンドラから呼び出されるメインのデータ処理関数。
  * @details 受信データをログに保存し、内容を解析して各UI画面の表示を更新します。

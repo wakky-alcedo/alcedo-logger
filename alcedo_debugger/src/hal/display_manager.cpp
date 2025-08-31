@@ -96,5 +96,4 @@ void display_init() {
 void display_handler() {
     // lcd.initBus();
     lv_timer_handler(); // LVGLのタイマーハンドラを呼び出す
-    delay(5);
 }

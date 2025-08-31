@@ -42,7 +42,7 @@ void setup() {
     Serial.println("Settings initialized");
 
     ui_init();            // UIオブジェクトを作成 (display_initの後)
-    // ui_events_init();     // UIイベントを関連付け (ui_initの後)
+    ui_events_init();     // UIイベントを関連付け (ui_initの後)
     uart_init(process_incoming_data); // UART受信開始、コールバックを登録
 
     // --- 起動後のUIセットアップ ---
@@ -74,7 +74,6 @@ void loop()
     // lv_label_set_text(uic_aa, chbuff);
     // lv_label_get
 
-    delay(5);
     display_handler();
     uart_handler();
 }

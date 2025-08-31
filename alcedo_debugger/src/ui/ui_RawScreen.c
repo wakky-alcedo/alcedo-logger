@@ -14,7 +14,7 @@ void ui_event_SerialPloter(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        _ui_screen_change(&ui_HomeScreen, LV_SCR_LOAD_ANIM_OVER_RIGHT, 500, 0, &ui_HomeScreen_screen_init);
+        _ui_screen_change(&ui_HomeScreen, LV_SCR_LOAD_ANIM_OVER_RIGHT, 200, 0, &ui_HomeScreen_screen_init);
     }
 }
 
@@ -30,6 +30,7 @@ void ui_RawScreen_screen_init(void)
     lv_obj_set_height(ui_SerialPloter, 240);
     lv_obj_set_align(ui_SerialPloter, LV_ALIGN_CENTER);
     lv_textarea_set_placeholder_text(ui_SerialPloter, "Placeholder...");
+    lv_obj_clear_flag(ui_SerialPloter, LV_OBJ_FLAG_CLICK_FOCUSABLE);      /// Flags
 
     ui_Switch1 = lv_switch_create(ui_RawScreen);
     lv_obj_set_width(ui_Switch1, 50);

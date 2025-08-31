@@ -21,7 +21,7 @@ void settings_init() {
     if (config.containsKey("startup_screen")) {
         settings.startupScreen = (const char*)config["startup_screen"];
     }
-    lcd.initBus();
+    // lcd.initBus();
 }
 
 void save_settings() {
@@ -34,5 +34,5 @@ void save_settings() {
         serializeJson(config, file);
         file.close();
     }
-    lcd.initBus();
+    // lcd.initBus();
 }

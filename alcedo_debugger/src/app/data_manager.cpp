@@ -4,6 +4,8 @@
 
 static bool isIndexReceived = false;
 
+DisplayMode current_mode = DisplayMode::LIVE;
+
 // 簡易的なインデックス行判定
 bool is_index_line(const String& data) {
     if (data.indexOf(',') > 0) {
@@ -20,6 +22,10 @@ void process_incoming_data(const String& data) {
     // 1. SDカードに全データをログとして保存
     log_to_sd(data);
 
+    if (current_mode == DisplayMode::PLAYBACK) {
+        // 再生モードではUI更新をスキップ
+        return;
+    }
     // 2. UIの更新
     // Rawモード画面への追記
     lv_textarea_add_text(ui_SerialPloter, data.c_str());

@@ -16,11 +16,14 @@ extern void ui_HomeScreen_screen_destroy(void);
 extern lv_obj_t * ui_HomeScreen;
 extern void ui_event_serialraw(lv_event_t * e);
 extern lv_obj_t * ui_serialraw;
-extern void ui_event_Realtime(lv_event_t * e);
-extern lv_obj_t * ui_Realtime;
-extern lv_obj_t * ui_Switch2;
+extern lv_obj_t * ui_Label3;
+extern void ui_event_analytics(lv_event_t * e);
+extern lv_obj_t * ui_analytics;
+extern lv_obj_t * ui_Label2;
 extern lv_obj_t * ui_loglist;
-extern lv_obj_t * ui_statuslabel;
+extern void ui_event_setting(lv_event_t * e);
+extern lv_obj_t * ui_setting;
+extern lv_obj_t * ui_Label4;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

@@ -5,7 +5,8 @@
 #include <vector>
 
 
-static String currentLogFile;
+// static String currentLogFile;
+String currentLogFile;
 extern std::vector<lv_obj_t*> log_list_buttons; // ui_events.cppで定義
 
 SPIClass SPI_SD(VSPI);
@@ -18,7 +19,7 @@ void sd_card_init() {
         // lv_label_set_text(ui_statuslabel, "SD Card Mount Failed!");
         while (1);
     }
-    Serial.println("SD Card Mount Successful");
+    // Serial.println("SD Card Mount Successful");
     // create_new_log_file();
 }
 
@@ -46,34 +47,48 @@ void log_to_sd(const String& data) {
         file.println(String(millis()) + "," + data);
         file.close();
     }
-    lcd.initBus();
+    // lcd.initBus();
 }
 
+/**
+ * @brief ログファイル一覧をUIのリストに反映する
+ */
 void populate_log_list() {
     // 既存リストのクリア
-    for (auto btn : log_list_buttons) {
-        lv_obj_del(btn);
-    }
-    log_list_buttons.clear();
+    // for (auto btn : log_list_buttons) {
+    //     lv_obj_del(btn);
+    // }
+    // log_list_buttons.clear();
 
     sd_card_init();
     File root = SD.open("/");
     File file = root.openNextFile();
+    String logFiles = "Realtime\n"; // 最初に Realtime を追加
     while (file) {
-        String fileName = file.name();
-        if (fileName.startsWith(LOG_FILE_PREFIX) && fileName.endsWith(LOG_FILE_EXTENSION)) {
-            lv_obj_t* btn = lv_list_add_btn(ui_loglist, LV_SYMBOL_FILE, fileName.c_str());
-            log_list_buttons.push_back(btn);
+        String filePath = file.path();
+        if (filePath.startsWith(LOG_FILE_PREFIX) && filePath.endsWith(LOG_FILE_EXTENSION)) {
+            // lv_obj_t* btn = lv_list_add_btn(ui_loglist, LV_SYMBOL_FILE, filePath.c_str());
+            // log_list_buttons.push_back(btn);
+            String fileName = file.name();
+            logFiles += fileName + "\n";
         }
         file.close();
         file = root.openNextFile();
     }
+    if (!logFiles.isEmpty()) { // logFilesの最後の改行を削除
+        logFiles.remove(logFiles.length() - 1);
+    }
+    lv_roller_set_options(ui_loglist, logFiles.c_str(), LV_ROLLER_MODE_NORMAL);
     root.close();
-    lcd.initBus();
+    // lcd.initBus();
 }
 
 String read_log_file_content(const String& filename) {
     sd_card_init();
+    if (!SD.exists(filename)) {
+        // return "Error: Log file does not exist.";
+        return "";
+    }
     File file = SD.open(filename, FILE_READ);
     if (!file) {
         return "Error: Failed to open file.";
@@ -85,6 +100,6 @@ String read_log_file_content(const String& filename) {
         line_count++;
     }
     file.close();
-    lcd.initBus();
+    // lcd.initBus();
     return content;
 }

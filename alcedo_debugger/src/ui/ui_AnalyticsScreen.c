@@ -6,8 +6,17 @@
 #include "ui.h"
 
 lv_obj_t * ui_AnalyticsScreen = NULL;
-lv_obj_t * ui_Spinbox1 = NULL;
+lv_obj_t * ui_Button5 = NULL;
+lv_obj_t * ui_Label5 = NULL;
 // event funtions
+void ui_event_Button5(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_HomeScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 200, 0, &ui_HomeScreen_screen_init);
+    }
+}
 
 // build funtions
 
@@ -16,15 +25,22 @@ void ui_AnalyticsScreen_screen_init(void)
     ui_AnalyticsScreen = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_AnalyticsScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_Spinbox1 = lv_spinbox_create(ui_AnalyticsScreen);
-    lv_obj_set_width(ui_Spinbox1, 70);
-    lv_obj_set_height(ui_Spinbox1, 29);
-    lv_obj_set_x(ui_Spinbox1, 107);
-    lv_obj_set_y(ui_Spinbox1, -39);
-    lv_obj_set_align(ui_Spinbox1, LV_ALIGN_CENTER);
-    lv_spinbox_set_digit_format(ui_Spinbox1, 3, 2);
-    lv_spinbox_set_range(ui_Spinbox1, 0, 9999);
-    lv_spinbox_set_cursor_pos(ui_Spinbox1, 1 - 1);
+    ui_Button5 = lv_btn_create(ui_AnalyticsScreen);
+    lv_obj_set_width(ui_Button5, 45);
+    lv_obj_set_height(ui_Button5, 50);
+    lv_obj_set_x(ui_Button5, 127);
+    lv_obj_set_y(ui_Button5, -85);
+    lv_obj_set_align(ui_Button5, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Button5, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_Button5, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_Label5 = lv_label_create(ui_Button5);
+    lv_obj_set_width(ui_Label5, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label5, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label5, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label5, "Home");
+
+    lv_obj_add_event_cb(ui_Button5, ui_event_Button5, LV_EVENT_ALL, NULL);
 
 }
 
@@ -34,6 +50,7 @@ void ui_AnalyticsScreen_screen_destroy(void)
 
     // NULL screen variables
     ui_AnalyticsScreen = NULL;
-    ui_Spinbox1 = NULL;
+    ui_Button5 = NULL;
+    ui_Label5 = NULL;
 
 }

@@ -14,7 +14,9 @@ extern "C" {
 extern void ui_AnalyticsScreen_screen_init(void);
 extern void ui_AnalyticsScreen_screen_destroy(void);
 extern lv_obj_t * ui_AnalyticsScreen;
-extern lv_obj_t * ui_Spinbox1;
+extern void ui_event_Button5(lv_event_t * e);
+extern lv_obj_t * ui_Button5;
+extern lv_obj_t * ui_Label5;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus
