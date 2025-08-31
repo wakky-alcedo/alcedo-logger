@@ -9,6 +9,7 @@
 
 // LovyanGFXのヘッダをインクルード（ここでピン設定を行うため）
 #include <hal/LGFX_Config.hpp>
+static LGFX lcd;
 
 // --- UART Settings ---
 #define UART_INSTANCE 2    ///< 使用するUARTの番号 (UART2)

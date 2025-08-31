@@ -4,11 +4,9 @@
  */
 #pragma once
 
-#include "display_manager.h"
 #include <LovyanGFX.hpp>
-#include <config.h>
-#include <lvgl.h>
-#include <ui/ui.h>
+
+// static LGFX lcd;
 
 /**
  * @brief ディスプレイとLVGLのドライバを初期化します。

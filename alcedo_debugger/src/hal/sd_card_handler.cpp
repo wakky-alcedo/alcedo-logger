@@ -4,15 +4,22 @@
 #include <SD.h>
 #include <vector>
 
+
 static String currentLogFile;
 extern std::vector<lv_obj_t*> log_list_buttons; // ui_events.cppで定義
 
+SPIClass SPI_SD(VSPI);
+
 void sd_card_init() {
-    if (!SD.begin(SD_CS_PIN)) {
-        Serial.println("SD card initialization failed!");
-        return;
+    enum { spi_sck = 18, spi_miso = 19, spi_mosi = 23, spi_ss = 5 };
+    SPI_SD.begin(spi_sck, spi_miso, spi_mosi, SD_CS_PIN);
+    if (!SD.begin(SD_CS_PIN, SPI_SD)) {
+        Serial.println("Card Mount Failed");
+        // lv_label_set_text(ui_statuslabel, "SD Card Mount Failed!");
+        while (1);
     }
-    create_new_log_file();
+    Serial.println("SD Card Mount Successful");
+    // create_new_log_file();
 }
 
 void create_new_log_file() {
@@ -22,7 +29,7 @@ void create_new_log_file() {
         char fileName[30];
         sprintf(fileName, "%s%03d%s", LOG_FILE_PREFIX, fileNumber, LOG_FILE_EXTENSION);
         Serial.println(fileName);
-        if (!SD.exists(fileName)) { // 
+        if (!SD.exists(fileName)) {
             currentLogFile = String(fileName);
             Serial.println("New log file created: " + currentLogFile);
             break;
@@ -33,11 +40,13 @@ void create_new_log_file() {
 }
 
 void log_to_sd(const String& data) {
+    sd_card_init();
     File file = SD.open(currentLogFile, FILE_APPEND);
     if (file) {
         file.println(String(millis()) + "," + data);
         file.close();
     }
+    lcd.initBus();
 }
 
 void populate_log_list() {
@@ -47,6 +56,7 @@ void populate_log_list() {
     }
     log_list_buttons.clear();
 
+    sd_card_init();
     File root = SD.open("/");
     File file = root.openNextFile();
     while (file) {
@@ -59,9 +69,11 @@ void populate_log_list() {
         file = root.openNextFile();
     }
     root.close();
+    lcd.initBus();
 }
 
 String read_log_file_content(const String& filename) {
+    sd_card_init();
     File file = SD.open(filename, FILE_READ);
     if (!file) {
         return "Error: Failed to open file.";
@@ -73,5 +85,6 @@ String read_log_file_content(const String& filename) {
         line_count++;
     }
     file.close();
+    lcd.initBus();
     return content;
 }

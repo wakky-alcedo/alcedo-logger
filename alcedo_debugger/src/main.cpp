@@ -8,6 +8,7 @@
 #include <app/data_manager.h>
 #include <app/ui_events.h>
 #include <config.h>
+// #include <hal/LGFX_Config.hpp>
 #include <ui/ui.h>
 
 /*Don't forget to set Sketchbook location in File/Preferences to the path of your UI project (the parent foder of this INO file)*/
@@ -27,16 +28,16 @@ void setup() {
     Serial.begin( 115200 ); // prepare for possible serial debug
     Serial.println("Setup started");
 
-    String LVGL_Arduino = "Hello Arduino! ";
+    String LVGL_Arduino = "LVGL_Arduino ";
     LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
     Serial.println( LVGL_Arduino );
-    Serial.println( "I am LVGL_Arduino" );
 
     // --- 初期化処理 ---
+    sd_card_init();       // SDカード (display_initの後) display より sdcard を先に初期化 ←たぶんSDカードのピンをLGFXが使うので
+    create_new_log_file();
+    Serial.println("SD Card initialized");
     display_init();       // ディスプレイとLVGL
     Serial.println("Display initialized");
-    sd_card_init();       // SDカード (display_initの後)
-    Serial.println("SD Card initialized");
     settings_init();      // 設定 (sd_card_initの後)
     Serial.println("Settings initialized");
 
@@ -55,6 +56,7 @@ void setup() {
     } else { // "home" or default
         lv_scr_load(ui_HomeScreen);
     }
+
     Serial.println( "Setup done" );
 }
 

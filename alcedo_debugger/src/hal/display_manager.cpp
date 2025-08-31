@@ -1,11 +1,12 @@
 #include "display_manager.h"
 #include <LovyanGFX.hpp>
 #include <config.h>
+// #include <hal/LGFX_Config.hpp>
 #include <lvgl.h>
 #include <ui/ui.h>
 
 // LovyanGFXのインスタンス (config.hで設定)
-static LGFX lcd;
+// static LGFX lcd;
 
 // LVGL用バッファ
 static const uint32_t screenWidth = 320;
@@ -49,11 +50,11 @@ void touchpad_read(lv_indev_drv_t *indev, lv_indev_data_t *data) {
         data->point.y = touchY;
         data->state = LV_INDEV_STATE_PR;
 
-        Serial.print( "Data x " );
-        Serial.println( touchX );
+        // Serial.print( "Data x " );
+        // Serial.println( touchX );
 
-        Serial.print( "Data y " );
-        Serial.println( touchY );
+        // Serial.print( "Data y " );
+        // Serial.println( touchY );
     } else {
         data->state = LV_INDEV_STATE_REL;
     }
@@ -93,6 +94,7 @@ void display_init() {
 }
 
 void display_handler() {
+    // lcd.initBus();
     lv_timer_handler(); // LVGLのタイマーハンドラを呼び出す
     delay(5);
 }

@@ -13,7 +13,7 @@ public:
             auto cfg = _bus_instance.config();
 
             // SPIバスの設定
-            cfg.spi_host         = VSPI_HOST;
+            cfg.spi_host         = HSPI_HOST;
             cfg.spi_mode         = 0;
             cfg.freq_write       = 40000000;
             cfg.freq_read        = 16000000;
@@ -75,7 +75,7 @@ public:
             cfg.bus_shared = false; // 変更
             cfg.offset_rotation = 0;
 
-            cfg.spi_host = HSPI_HOST; // 変更
+            cfg.spi_host = -1; // 変更
             cfg.freq = 1000000;
             cfg.pin_sclk = 25;        // 変更
             cfg.pin_mosi = 32;        // 変更
