@@ -15,6 +15,8 @@ bool is_index_line(const String& data) {
 }
 
 void process_incoming_data(const String& data) {
+    Serial.println("Received data: " + data); // デバッグ用
+
     // 1. SDカードに全データをログとして保存
     log_to_sd(data);
 
