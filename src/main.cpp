@@ -1,7 +1,13 @@
 #include <lvgl.h>
 #define LGFX_USE_V1
 #include <LovyanGFX.hpp>
-#include <display.hpp>
+#include <hal/LGFX_Config.hpp>
+#include <hal/display_manager.h>
+#include <hal/sd_card_handler.h>
+#include <hal/uart_handler.h>
+#include <app/settings_manager.h>
+#include <app/data_manager.h>
+#include <app/ui_events.h>
 #include <ui/ui.h>
 
 /*Don't forget to set Sketchbook location in File/Preferences to the path of your UI project (the parent foder of this INO file)*/
@@ -24,51 +30,35 @@ void my_print(const char * buf)
 }
 #endif
 
-/* Display flushing */
-void my_disp_flush( lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p )
-{
-    uint32_t w = ( area->x2 - area->x1 + 1 );
-    uint32_t h = ( area->y2 - area->y1 + 1 );
-
-    tft.startWrite();
-    tft.setAddrWindow( area->x1, area->y1, w, h );
-    // tft.pushColors( ( uint16_t * )&color_p->full, w * h, true );
-    tft.writePixels((lgfx::rgb565_t *)&color_p->full, w * h );
-    tft.endWrite();
-
-    lv_disp_flush_ready( disp );
-}
-
-/*Read the touchpad*/
-void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
-{
-    uint16_t touchX = 0, touchY = 0;
-
-    bool touched = tft.getTouch( &touchX, &touchY);
-
-    if( !touched )
-    {
-        data->state = LV_INDEV_STATE_REL;
-    }
-    else
-    {
-        data->state = LV_INDEV_STATE_PR;
-
-        /*Set the coordinates*/
-        data->point.x = touchX;
-        data->point.y = touchY;
-
-        Serial.print( "Data x " );
-        Serial.println( touchX );
-
-        Serial.print( "Data y " );
-        Serial.println( touchY );
-    }
-}
-
-void setup()
-{
+void setup() {
     Serial.begin( 115200 ); /* prepare for possible serial debug */
+    Serial.println("Setup started");
+
+    // --- 初期化処理 ---
+    display_init();       // ディスプレイとLVGL
+    Serial.println("Display initialized");
+    sd_card_init();       // SDカード (display_initの後)
+    Serial.println("SD Card initialized");
+    settings_init();      // 設定 (sd_card_initの後)
+    Serial.println("Settings initialized");
+
+    ui_init();            // UIオブジェクトを作成 (display_initの後)
+    // ui_events_init();     // UIイベントを関連付け (ui_initの後)
+    
+    uart_init(process_incoming_data); // UART受信開始、コールバックを登録
+
+    // --- 起動後のUIセットアップ ---
+    populate_log_list(); // ホーム画面のログ一覧を埋める
+    
+    // 設定に基づいて起動スクリーンをロード
+    if (settings.startupScreen == "raw_mode") {
+        lv_scr_load(ui_RawScreen);
+    } else if (settings.startupScreen == "analytics_mode") {
+        lv_scr_load(ui_AnalyticsScreen);
+    } else { // "home" or default
+        lv_scr_load(ui_HomeScreen);
+    }
+
 
     String LVGL_Arduino = "Hello Arduino! ";
     LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
@@ -81,29 +71,6 @@ void setup()
 #if LV_USE_LOG != 0
     lv_log_register_print_cb( my_print ); /* register print function for debugging */
 #endif
-
-    tft.begin();          /* TFT init */
-    tft.setRotation( 1 ); /* Landscape orientation, flipped */
-
-    lv_disp_draw_buf_init( &draw_buf, buf, NULL, screenWidth * screenHeight / 10 );
-
-    /*Initialize the display*/
-    static lv_disp_drv_t disp_drv;
-    lv_disp_drv_init( &disp_drv );
-    /*Change the following line to your display resolution*/
-    disp_drv.hor_res = screenWidth;
-    disp_drv.ver_res = screenHeight;
-    disp_drv.flush_cb = my_disp_flush;
-    disp_drv.draw_buf = &draw_buf;
-    lv_disp_drv_register( &disp_drv );
-
-    /*Initialize the (dummy) input device driver*/
-    static lv_indev_drv_t indev_drv;
-    lv_indev_drv_init( &indev_drv );
-    indev_drv.type = LV_INDEV_TYPE_POINTER;
-    indev_drv.read_cb = my_touchpad_read;
-    lv_indev_drv_register( &indev_drv );
-
 
     ui_init();
     // Light
@@ -134,13 +101,20 @@ void setup()
 
 void loop()
 {
-    lv_timer_handler(); /* let the GUI do its work */
+    // lv_timer_handler(); /* let the GUI do its work */
+
+    // if (SerialPort.available()) {
+    //     String receivedData = SerialPort.readStringUntil('\n');
+    //     processUartData(receivedData);
+    // }
 
     // sprintf(chbuff, "%02d:%02d", tm->tm_hour, tm->tm_min);
     // lv_label_set_text(uic_sample, chbuff);
     // lv_label_set_text(uic_aa, chbuff);
     // lv_label_get
 
-    delay(5);
+    // delay(5);
+    display_handler();
+    uart_handler();
 }
 

@@ -20,8 +20,8 @@ void process_incoming_data(const String& data) {
 
     // 2. UIの更新
     // Rawモード画面への追記
-    lv_textarea_add_text(ui_raw_textarea, data.c_str());
-    lv_textarea_add_text(ui_raw_textarea, "\n");
+    lv_textarea_add_text(ui_SerialPloter, data.c_str());
+    lv_textarea_add_text(ui_SerialPloter, "\n");
 
     // Analyticsモード画面の更新
     if (is_index_line(data)) {

@@ -1,5 +1,6 @@
 #include "uart_handler.h"
-#include "../config.h"
+#include "ui/ui.h"
+#include "config.h"
 #include <HardwareSerial.h>
 
 static HardwareSerial SerialPort(UART_INSTANCE);
@@ -17,5 +18,9 @@ void uart_handler() {
         if (data.length() > 0 && data_received_callback != nullptr) {
             data_received_callback(data);
         }
+
+        // ↓uart のコールバック関数に入れている
+        // lv_textarea_add_text(ui_SerialPloter, data.c_str());
+        // lv_textarea_add_text(ui_SerialPloter, "\n"); // 改行を追加
     }
 }

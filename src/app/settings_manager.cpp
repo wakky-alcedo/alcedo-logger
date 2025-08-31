@@ -1,7 +1,8 @@
 #include "settings_manager.h"
 #include "config.h"
 #include <SD.h>
-#include <Arduino_JSON.h>
+// #include <Arduino_JSON.h>
+#include <ArduinoJson.h>
 
 AppSettings settings;
 
@@ -11,20 +12,21 @@ void settings_init() {
         save_settings(); // デフォルト設定で作成
         return;
     }
-    JSONVar config = JSON.parse(file.readString());
+    DynamicJsonDocument config(1024);
+    deserializeJson(config, file.readString());
     file.close();
-    if (config.hasOwnProperty("startup_screen")) {
+    if (config.containsKey("startup_screen")) {
         settings.startupScreen = (const char*)config["startup_screen"];
     }
 }
 
 void save_settings() {
-    JSONVar config;
+    DynamicJsonDocument config(1024);
     config["startup_screen"] = settings.startupScreen;
 
     File file = SD.open(SETTINGS_FILE, FILE_WRITE);
     if (file) {
-        file.print(JSON.stringify(config));
+        serializeJson(config, file);
         file.close();
     }
 }

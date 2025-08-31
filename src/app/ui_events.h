@@ -17,3 +17,15 @@ extern std::vector<lv_obj_t*> log_list_buttons;
  * SquareLine Studio側でイベントを設定した場合は、手動での呼び出しは不要な場合があります。
  */
 void ui_events_init();
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void DropdownStartupScreenChange(lv_event_t * e);
+
+#ifdef __cplusplus
+} /*extern "C"*/
+#endif

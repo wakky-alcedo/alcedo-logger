@@ -5,11 +5,10 @@
 #pragma once
 
 // --- Hardware Pin Definitions ---
-// TODO: ご自身の環境に合わせてピン番号を変更してください
-#define SD_CS_PIN 14  ///< SDカードのCS (Chip Select) ピン
+#define SD_CS_PIN 5  ///< SDカードのCS (Chip Select) ピン
 
 // LovyanGFXのヘッダをインクルード（ここでピン設定を行うため）
-#include <LGFX_Config.h> // ★ このファイルは別途作成が必要です
+#include <hal/LGFX_Config.hpp>
 
 // --- UART Settings ---
 #define UART_INSTANCE 2    ///< 使用するUARTの番号 (UART2)
