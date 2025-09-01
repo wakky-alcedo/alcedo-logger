@@ -24,6 +24,9 @@ extern lv_obj_t * ui_loglist;
 extern void ui_event_setting(lv_event_t * e);
 extern lv_obj_t * ui_setting;
 extern lv_obj_t * ui_Label4;
+extern void ui_event_setting1(lv_event_t * e);
+extern lv_obj_t * ui_setting1;
+extern lv_obj_t * ui_Label6;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

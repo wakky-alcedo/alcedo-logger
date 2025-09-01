@@ -18,6 +18,7 @@ bool is_index_line(const String& data) {
 
 void process_incoming_data(const String& data) {
     Serial.println("Received data: " + data); // デバッグ用
+    lv_textarea_add_text(ui_debugmonitor, ("Received data: " + data + "\n").c_str());
 
     // 1. SDカードに全データをログとして保存
     log_to_sd(data);
@@ -27,7 +28,8 @@ void process_incoming_data(const String& data) {
         return;
     }
     // 2. UIの更新
-    // Rawモード画面への追記
+    // Rawモード画面の最後の行にデータを追加
+    lv_textarea_set_cursor_pos(ui_SerialPloter, LV_TEXTAREA_CURSOR_LAST);
     lv_textarea_add_text(ui_SerialPloter, data.c_str());
     lv_textarea_add_text(ui_SerialPloter, "\n");
 

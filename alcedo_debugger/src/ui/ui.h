@@ -32,6 +32,7 @@ extern "C" {
 #include "ui_AnalyticsScreen.h"
 #include "ui_GraphScreen.h"
 #include "ui_SettingScreen.h"
+#include "ui_DebugScreen.h"
 
 ///////////////////// VARIABLES ////////////////////
 

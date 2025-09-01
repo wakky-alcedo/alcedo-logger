@@ -13,6 +13,8 @@ lv_obj_t * ui_Label2 = NULL;
 lv_obj_t * ui_loglist = NULL;
 lv_obj_t * ui_setting = NULL;
 lv_obj_t * ui_Label4 = NULL;
+lv_obj_t * ui_setting1 = NULL;
+lv_obj_t * ui_Label6 = NULL;
 // event funtions
 void ui_event_serialraw(lv_event_t * e)
 {
@@ -38,6 +40,15 @@ void ui_event_setting(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         _ui_screen_change(&ui_SettingScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 200, 0, &ui_SettingScreen_screen_init);
+    }
+}
+
+void ui_event_setting1(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_DebugScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 200, 0, &ui_DebugScreen_screen_init);
     }
 }
 
@@ -101,9 +112,25 @@ void ui_HomeScreen_screen_init(void)
     lv_obj_set_align(ui_Label4, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label4, "Setting");
 
+    ui_setting1 = lv_btn_create(ui_HomeScreen);
+    lv_obj_set_width(ui_setting1, 70);
+    lv_obj_set_height(ui_setting1, 50);
+    lv_obj_set_x(ui_setting1, 120);
+    lv_obj_set_y(ui_setting1, 85);
+    lv_obj_set_align(ui_setting1, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_setting1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_setting1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_Label6 = lv_label_create(ui_setting1);
+    lv_obj_set_width(ui_Label6, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label6, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label6, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label6, "debugg");
+
     lv_obj_add_event_cb(ui_serialraw, ui_event_serialraw, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_analytics, ui_event_analytics, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_setting, ui_event_setting, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_setting1, ui_event_setting1, LV_EVENT_ALL, NULL);
 
 }
 
@@ -120,5 +147,7 @@ void ui_HomeScreen_screen_destroy(void)
     ui_loglist = NULL;
     ui_setting = NULL;
     ui_Label4 = NULL;
+    ui_setting1 = NULL;
+    ui_Label6 = NULL;
 
 }

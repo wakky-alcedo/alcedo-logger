@@ -1,14 +1,14 @@
 /**
  * @file uart_handler.h
- * @brief マイコン間でのUART通信の受信処理を担当します。
+ * @brief マイコン間でのUART通信の受信処理を担当します。(割り込み方式)
  */
 #pragma once
 #include <Arduino.h>
 
 /**
- * @brief UARTを指定した設定で初期化します。
+ * @brief UARTドライバを割り込みモードで初期化し、受信タスクを開始します。
  * @param callback データを受信したときに呼び出されるコールバック関数へのポインタ。
- * 受信した1行分のデータが引数として渡されます。
+ * 受信したデータが引数として渡されます。
  */
 void uart_init(void (*callback)(const String&));
 

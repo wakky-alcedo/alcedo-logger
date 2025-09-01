@@ -19,7 +19,7 @@
 /* Serial debugging */
 void my_print(const char * buf)
 {
-    Serial.printf(buf);
+    // Serial.printf(buf);
     Serial.flush();
 }
 #endif
@@ -43,7 +43,8 @@ void setup() {
 
     ui_init();            // UIオブジェクトを作成 (display_initの後)
     ui_events_init();     // UIイベントを関連付け (ui_initの後)
-    uart_init(process_incoming_data); // UART受信開始、コールバックを登録
+    Serial.println("UI initialized");
+    lv_textarea_add_text(ui_debugmonitor, "UI initialized\n");
 
     // --- 起動後のUIセットアップ ---
     populate_log_list(); // ホーム画面のログ一覧を埋める
@@ -57,7 +58,9 @@ void setup() {
         lv_scr_load(ui_HomeScreen);
     }
 
+    uart_init(process_incoming_data); // UART受信開始、コールバックを登録
     Serial.println( "Setup done" );
+    lv_textarea_add_text(ui_debugmonitor, "Setup done\n");
 }
 
 void loop()
@@ -74,7 +77,7 @@ void loop()
     // lv_label_set_text(uic_aa, chbuff);
     // lv_label_get
 
-    display_handler();
     uart_handler();
+    display_handler();
 }
 
