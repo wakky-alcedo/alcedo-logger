@@ -11,6 +11,7 @@
  */
 struct AppSettings {
     String startupScreen = "home"; ///< @var 起動時に表示する画面 (home, raw_mode, analytics_mode)
+    int baudRate = 115200;         ///< @var シリアル通信のボーレート
 };
 
 /**

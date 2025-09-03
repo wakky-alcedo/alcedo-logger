@@ -15,7 +15,7 @@ static LGFX lcd;
 #define UART_INSTANCE UART_NUM_0    ///< 使用するUARTの番号 (UART0)
 #define UART_RX_PIN 3      ///< UART0の受信(RX)ピン
 #define UART_TX_PIN 1      ///< UART0の送信(TX)ピン
-#define UART_BAUDRATE 115200 ///< UARTのボーレート
+// #define UART_BAUDRATE 115200 ///< UARTのボーレート
 
 // --- Application Settings ---
 #define LOG_FILE_PREFIX "/log_"            ///< ログファイルの接頭辞

@@ -21,12 +21,16 @@ void settings_init() {
     if (config.containsKey("startup_screen")) {
         settings.startupScreen = (const char*)config["startup_screen"];
     }
+    if (config.containsKey("baud_rate")) {
+        settings.baudRate = config["baud_rate"];
+    }
     // lcd.initBus();
 }
 
 void save_settings() {
     DynamicJsonDocument config(1024);
     config["startup_screen"] = settings.startupScreen;
+    config["baud_rate"] = settings.baudRate;
 
     sd_card_init();
     File file = SD.open(SETTINGS_FILE, FILE_WRITE);

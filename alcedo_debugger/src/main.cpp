@@ -39,6 +39,8 @@ void setup() {
     display_init();       // ディスプレイとLVGL
     Serial.println("Display initialized");
     settings_init();      // 設定 (sd_card_initの後)
+    Serial.end();
+    Serial.begin( settings.baudRate ); // シリアル通信を設定ファイルのボーレートで再初期化
     Serial.println("Settings initialized");
 
     ui_init();            // UIオブジェクトを作成 (display_initの後)

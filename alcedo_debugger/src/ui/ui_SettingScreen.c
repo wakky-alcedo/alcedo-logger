@@ -9,6 +9,8 @@ lv_obj_t * ui_SettingScreen = NULL;
 lv_obj_t * ui_Label1 = NULL;
 lv_obj_t * ui_startupscreen = NULL;
 lv_obj_t * ui_home = NULL;
+lv_obj_t * ui_Label7 = NULL;
+lv_obj_t * ui_baudrate = NULL;
 // event funtions
 void ui_event_home(lv_event_t * e)
 {
@@ -52,6 +54,23 @@ void ui_SettingScreen_screen_init(void)
     lv_obj_add_flag(ui_home, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_home, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    ui_Label7 = lv_label_create(ui_SettingScreen);
+    lv_obj_set_width(ui_Label7, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label7, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label7, -93);
+    lv_obj_set_y(ui_Label7, -1);
+    lv_obj_set_align(ui_Label7, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label7, "BaudRate");
+
+    ui_baudrate = lv_dropdown_create(ui_SettingScreen);
+    lv_dropdown_set_options(ui_baudrate, "4,800\n9,600\n19,200\n57,600\n115,200");
+    lv_obj_set_width(ui_baudrate, 150);
+    lv_obj_set_height(ui_baudrate, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_baudrate, 76);
+    lv_obj_set_y(ui_baudrate, 5);
+    lv_obj_set_align(ui_baudrate, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_baudrate, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
     lv_obj_add_event_cb(ui_home, ui_event_home, LV_EVENT_ALL, NULL);
 
 }
@@ -65,5 +84,7 @@ void ui_SettingScreen_screen_destroy(void)
     ui_Label1 = NULL;
     ui_startupscreen = NULL;
     ui_home = NULL;
+    ui_Label7 = NULL;
+    ui_baudrate = NULL;
 
 }

@@ -18,6 +18,8 @@ extern lv_obj_t * ui_Label1;
 extern lv_obj_t * ui_startupscreen;
 extern void ui_event_home(lv_event_t * e);
 extern lv_obj_t * ui_home;
+extern lv_obj_t * ui_Label7;
+extern lv_obj_t * ui_baudrate;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

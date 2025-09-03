@@ -71,7 +71,7 @@ void uart_init(void (*callback)(const String&)) {
 
     // 1. UARTの基本設定
     uart_config_t uart_config = {
-        .baud_rate = UART_BAUDRATE,
+        .baud_rate = settings.baudRate,
         .data_bits = UART_DATA_8_BITS,
         .parity    = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,

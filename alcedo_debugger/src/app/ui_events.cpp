@@ -17,6 +17,12 @@ void settings_dropdown_startup_screen_handler(lv_event_t * e) {
     save_settings();
 }
 
+void settings_baud_rate_handler(lv_event_t * e) {
+    char buf[32];
+    lv_dropdown_get_selected_str(ui_baudrate, buf, sizeof(buf));
+    settings.baudRate = atoi(buf);
+    save_settings();
+}
 
 static void log_list_event_handler(lv_event_t * e) {
     lv_obj_t* target = lv_event_get_target(e);
